@@ -9,9 +9,7 @@ export const unstable_settings = {
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync().catch(() => {
-  /* reloading the app might trigger some race conditions, ignore them */
-});
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useEffect(() => {
