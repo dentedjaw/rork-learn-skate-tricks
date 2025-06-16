@@ -2,7 +2,6 @@ import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { View } from 'react-native';
 import colors from '@/constants/colors';
 
 export const unstable_settings = {
@@ -10,14 +9,20 @@ export const unstable_settings = {
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => {
+  /* reloading the app might trigger some race conditions, ignore them */
+});
 
 export default function RootLayout() {
   useEffect(() => {
     // Hide the splash screen after a short delay
     const hideSplash = async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await SplashScreen.hideAsync();
+      try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await SplashScreen.hideAsync();
+      } catch (e) {
+        console.warn('Error hiding splash screen:', e);
+      }
     };
     
     hideSplash();
